@@ -26,7 +26,7 @@ lv_obj_t *a_btn;
 lv_obj_t *b_btn;
 lv_obj_t *x_btn;
 lv_obj_t *skills_btn;
-lv_obj_t *led_btn;
+
 
 lv_obj_t *temp_var_label;
 lv_obj_t *connection_var_label;
@@ -124,7 +124,6 @@ void confirm_screen()
         disabled_led_task->notify();
     if (auto_led_task)
         auto_led_task->notify();
-    comp_init_led_task = std::make_unique<pros::Task>(slow_blink, (void *)(intptr_t)(blink_color));
 }
 
 static void btn_handler(lv_event_t *e)
@@ -190,36 +189,6 @@ static void btn_handler(lv_event_t *e)
     else if (target == confirm_btn)
     {
         confirm_screen();
-    }
-    else if (target == led_btn)
-    {
-        // currently enabled, button turns off
-        if (led_enabled)
-        {
-            led_enabled = false;
-            lv_obj_set_style_bg_color(led_btn, lv_palette_main(LV_PALETTE_GREEN), 0);
-
-            if (auto_led_task)
-                auto_led_task->notify();
-            if (comp_init_led_task)
-                comp_init_led_task->notify();
-            if (disabled_led_task)
-                disabled_led_task->notify();
-            if (driver_led_task)
-                driver_led_task->notify();
-
-            
-            pros::delay(30);
-            ledsLeft.clear_all();
-            pros::delay(30);
-            ledsRight.clear_all();
-            pros::delay(30);
-        }
-        else
-        {
-            led_enabled = true;
-            lv_obj_set_style_bg_color(led_btn, lv_palette_main(LV_PALETTE_RED), 0);
-        }
     }
 }
 
@@ -457,19 +426,10 @@ void initialize()
 {
     pros::delay(500); // all 3 wire ports to configure
 
-    // turn off all leds if previously on
-    ledsLeft.clear_all();
-    pros::delay(20);
-    ledsRight.clear_all();
-    pros::delay(20);
-
-    solid(0x775500); // yellow to indicate calibrating
-
     chassis.calibrate();
     pros::delay(2000); // allow IMU to calibrate
     chassis.setPose(0, 0, 0);
 
-    solid(0x000000);
 }
 
 // runs after initialize and before comp switch / field control, e.g. auto selector on brain
@@ -490,22 +450,6 @@ void autonomous()
     if (disabled_led_task)
         disabled_led_task->notify();
 
-    int bouncy_color;
-    if (selected_color == COLOR_STATE::RED)
-    {
-        bouncy_color = 0xaa0000;
-    }
-    else if (selected_color == COLOR_STATE::BLUE)
-    {
-        bouncy_color = 0x0000aa;
-    }
-    else
-    {
-        bouncy_color = 0x880088; // purple
-    }
-
-    auto_led_task = std::make_unique<pros::Task>(bouncy, (void *)(intptr_t)(bouncy_color));
-
     run_auto(selected_mode, selected_color, selected_position);
 }
 
@@ -520,7 +464,6 @@ void opcontrol()
         comp_init_led_task->notify();
     if (disabled_led_task)
         disabled_led_task->notify();
-    driver_led_task = std::make_unique<pros::Task>(driver_animation);
 
     while (true)
     {
@@ -772,8 +715,9 @@ void opcontrol()
                     // drive forward and back a tile
                     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
                     {
-                        chassis.lateralPID.kP = lateral_kp;
-                        chassis.lateralPID.kD = lateral_kd;
+                                                // Update the entire controller settings struct
+                        chassis.lateralSettings.kP = lateral_kp;
+                        chassis.lateralSettings.kD = lateral_kd;
                         chassis.setPose(0, 0, 0);
                         chassis.moveToPose(0, 24, 0, 8000, {.lead = 0}); // lead to make straight, movetopoint doesn't keep straight
                         chassis.moveToPose(0, 0, 0, 8000, {.forwards = false, .lead = 0});
@@ -869,54 +813,16 @@ void opcontrol()
 
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
         {
-            intakeTop.move(127);
+            //intakeTop.move(127); //set to cascade height controller
         }
         else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
-            intakeTop.move(-127);
+            //intakeTop.move(-127);//this too
         }
         else
         {
-            intakeTop.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-            intakeTop.move_velocity(0); // brake to prevent balls from coming out
-        }
-
-        // loader mech piston toggle
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
-        {
-            loader_state = !loader_state;
-            loader.set_value(loader_state);
-        }
-
-        // mid mech piston hold
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
-        {
-            mid_state = true;
-            mid.set_value(HIGH);
-        }
-        else
-        {
-            mid_state = false;
-            mid.set_value(LOW);
-        }
-
-        // low mech piston hold
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN))
-        {
-            low_state = true;
-            low.set_value(HIGH);
-        }
-        else
-        {
-            low_state = false;
-            low.set_value(LOW);
-        }
-
-        // wing mech piston toggle
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
-        {
-            wing_state = !wing_state;
-            wing.set_value(wing_state);
+            //intakeTop.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD); //MODIFY: keep cascade from falling
+            //intakeTop.move_velocity(0); // brake to prevent balls from coming out
         }
 
         pros::delay(20); // don't break task scheduler
@@ -935,7 +841,6 @@ void disabled()
         auto_led_task->notify();
     if (driver_led_task)
         driver_led_task->notify();
-    disabled_led_task = std::make_unique<pros::Task>(rainbow);
 
     // driver skills (disabled after selecting skills in driver)
     if (selected_mode == MODE_STATE::SKILLS)

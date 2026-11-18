@@ -14,25 +14,16 @@ extern pros::Motor rT;
 extern pros::Motor rM;
 extern pros::Motor rF;
 
-extern pros::Motor intakeTop;
-extern pros::Motor intakeBottom;
+extern pros::Motor intakeBottom; //add cascade variable maybe piston or motor
 
 extern pros::MotorGroup leftMotors;
 extern pros::MotorGroup rightMotors;
 
 extern pros::Imu imu;
-extern pros::Distance distBack;
+extern pros::Distance distBack;//used with sensors maybe set up left sensor
 extern pros::Distance distRight;
 
-extern pros::adi::DigitalOut loader;
-extern pros::adi::DigitalOut mid;
-extern pros::adi::DigitalOut wing;
-extern pros::adi::DigitalOut low;
-
-extern pros::adi::Led ledsLeft;
-extern pros::adi::Led ledsRight;
-
-extern pros::Optical optical;
+extern pros::Optical optical; //used to detect things ie match lines or score color
 
 extern float lateral_kp;
 extern float lateral_ki;
@@ -74,13 +65,6 @@ enum class PID_STATE
     LATERAL,
     ANGULAR
 };
-
-extern bool loader_state;
-extern bool mid_state;
-extern bool wing_state;
-extern bool low_state;
-
-extern bool led_enabled;
 
 extern bool in_game;
 extern bool in_skills;

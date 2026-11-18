@@ -101,13 +101,6 @@ void auto_skills()
     chassis.moveToPose(-62, 48, -90, 1000, {.lead = 0, .maxSpeed = 60}, false);
     pros::delay(2000);
 
-    // distance sensor reset for y in case loader fails
-    if (use_distance_resets)
-    {
-        dist_average = average_distance(distRight, 0 / MM2INCH, 48 / MM2INCH);
-        new_y = (dist_average > 0) ? 72 - dist_average * MM2INCH - DIST_RIGHT_OFFSET : 48; // hardcode fallback
-        chassis.setPose(chassis.getPose().x, new_y, chassis.getPose().theta);
-    }
 
     // go to right side along inside
     chassis.moveToPose(-48, 48, -90, 1000, {.forwards = false, .lead = 0}, false);
@@ -171,13 +164,7 @@ void auto_skills()
     pros::delay(2000);
 
     // distance sensor reset for y in case loader fails
-    if (use_distance_resets)
-    {
-        dist_average = average_distance(distRight, 0 / MM2INCH, 48 / MM2INCH);
-        new_y = (dist_average > 0) ? -72 + dist_average * MM2INCH + DIST_RIGHT_OFFSET : -48; // hardcode fallback
-        chassis.setPose(chassis.getPose().x, new_y, chassis.getPose().theta);
-    }
-
+  
     // aligner reset
     chassis.moveToPose(20, -48, 90, 2000, {.forwards = false, .lead = 0}, false);
     chassis.tank(-127, -127, true);
@@ -219,13 +206,6 @@ void auto_skills()
     pros::delay(2000);
 
     // distance sensor reset for y in case loader fails
-    if (use_distance_resets)
-    {
-        dist_average = average_distance(distRight, 72 / MM2INCH, 144 / MM2INCH);
-        new_y = (dist_average > 0) ? 72 - dist_average * MM2INCH - DIST_RIGHT_OFFSET : -48; // hardcode fallback
-        chassis.setPose(chassis.getPose().x, new_y, chassis.getPose().theta);
-    }
-
     // score in bottom left again
     chassis.moveToPose(-20, -48, -90, 1000, {.forwards = false, .lead = 0}, false);
     chassis.tank(-127, -127, true);
@@ -244,7 +224,6 @@ void auto_skills()
     chassis.moveToPose(-45, -48, -90, 1000, {.lead = 0}, false);
     chassis.moveToPose(-45, -48, -45, 600, {.lead = 0}, false);
     chassis.moveToPose(-62, -19, -10, 1000, {}, false);
-    park(2, false);
     
 }
 

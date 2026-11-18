@@ -26,8 +26,6 @@ bool mid_state = false;
 bool wing_state = false; 
 bool low_state = false;
 
-bool led_enabled = false;
-
 COLOR_STATE selected_color = COLOR_STATE::NONE;
 
 pros::adi::DigitalOut loader(LOADER_PORT, loader_state);
