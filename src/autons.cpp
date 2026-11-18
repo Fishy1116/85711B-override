@@ -74,7 +74,7 @@ void auto_skills()
     int new_x;
 
     chassis.setPose(-46.5, 15, 90);
-    intakeTop.move(-20); // prevent preload from jamming
+    //intakeTop.move(-20); // prevent preload from jamming
     intakeBottom.move(127);
 
     // get 4 from center
@@ -84,15 +84,15 @@ void auto_skills()
     chassis.moveToPose(-24, 24, -45, 600, {.lead = 0}, false);
     chassis.moveToPose(-52, 48, -45, 1000, {.lead = 0, .minSpeed = 40}, false);
     chassis.moveToPose(-52, 48, -90, 600, {.lead = 0, .minSpeed = 40}, false);
-    loader.set_value(HIGH);
+    //loader.set_value(HIGH);
     chassis.moveToPose(-20, 48, -90, 1000, {.forwards = false, .lead = 0, .minSpeed = 80}, false);
     chassis.tank(-127, -127, true);
     intakeBottom.move(-127); // get unstuck
     pros::delay(200);
     intakeBottom.move(127);
-    intakeTop.move(127);
+    //intakeTop.move(127);
     pros::delay(800);
-    intakeTop.move(0);
+    //intakeTop.move(0);
     chassis.tank(0, 0, true);
     pros::delay(300);
     chassis.setPose(-29, 48, chassis.getPose().theta); // pose reset
@@ -104,7 +104,7 @@ void auto_skills()
 
     // go to right side along inside
     chassis.moveToPose(-48, 48, -90, 1000, {.forwards = false, .lead = 0}, false);
-    loader.set_value(LOW);
+    //loader.set_value(LOW);
     intakeBottom.move(0);
     chassis.moveToPose(-48, 48, -45, 600, {.lead = 0}, false);
     chassis.moveToPose(-30, 33, -45, 1000, {.forwards = false, .lead = 0}, false);
@@ -115,21 +115,21 @@ void auto_skills()
     chassis.moveToPose(45, 33, 180, 600, {.lead = 0, .minSpeed = 40}, false);
     chassis.moveToPose(45, 48, 180, 1000, {.forwards = false, .lead = 0}, false);
     chassis.moveToPose(45, 48, 90, 600, {.lead = 0, .minSpeed = 40}, false);
-    loader.set_value(HIGH);
+    //loader.set_value(HIGH);
     chassis.moveToPose(20, 48, 90, 1000, {.forwards = false, .lead = 0}, false);
     chassis.tank(-127, -127, true);
     intakeBottom.move(-127); // get unstuck
     pros::delay(200);
     intakeBottom.move(127);
-    intakeTop.move(127);
+    //intakeTop.move(127);
     pros::delay(1500);
-    intakeTop.move(0);
+    //intakeTop.move(0);
     chassis.tank(0, 0, true);
     pros::delay(100);
     chassis.setPose(29, 48, chassis.getPose().theta); // pose reset
 
     // get top right loader
-    loader.set_value(HIGH);
+    //loader.set_value(HIGH);
     chassis.moveToPose(62, 48, 90, 1000, {.lead = 0, .maxSpeed = 60}, false);
     pros::delay(2000);
 
@@ -144,13 +144,13 @@ void auto_skills()
     intakeBottom.move(-127); // get unstuck
     pros::delay(200);
     intakeBottom.move(127);
-    intakeTop.move(127);
+    //intakeTop.move(127);
     pros::delay(2000);
-    intakeTop.move(0);
+    //intakeTop.move(0);
     chassis.tank(0, 0, true);
     pros::delay(100);
     chassis.setPose(29, 48, 90); // pose reset
-    loader.set_value(LOW);
+    //loader.set_value(LOW);
 
     // go to bottom right
     chassis.moveToPose(40, 48, 90, 1000, {.lead = 0}, false);
@@ -159,7 +159,7 @@ void auto_skills()
     chassis.moveToPose(40, -48, 90, 600, {.lead = 0}, false);
 
     // get bottom right loader
-    loader.set_value(HIGH);
+    //loader.set_value(HIGH);
     chassis.moveToPose(62, -48, 90, 2000, {.lead = 0, .maxSpeed = 60}, false);
     pros::delay(2000);
 
@@ -172,7 +172,7 @@ void auto_skills()
     chassis.tank(0, 0, true);
     pros::delay(200);
     chassis.setPose(29, -48, 90); // pose reset
-    loader.set_value(LOW);
+    //loader.set_value(LOW);
 
     // go to bottom left along inside
     chassis.moveToPose(48, -48, 90, 1500, {.lead = 0}, false);
@@ -187,21 +187,21 @@ void auto_skills()
     chassis.moveToPose(-45, -48, 0, 2000, {.forwards = false, .lead = 0, .maxSpeed = 80}, false);
     intakeBottom.move(127);
     chassis.moveToPose(-45, -48, -90, 1000, {.lead = 0, .maxSpeed = 80}, false);
-    loader.set_value(HIGH);
+    //loader.set_value(HIGH);
     chassis.moveToPose(-20, -48, -90, 2000, {.forwards = false, .lead = 0}, false);
     chassis.tank(-127, -127, true);
     intakeBottom.move(-127); // get unstuck
     pros::delay(200);
     intakeBottom.move(127);
-    intakeTop.move(127);
+    //intakeTop.move(127);
     pros::delay(1200);
-    intakeTop.move(0);
+    //intakeTop.move(0);
     chassis.tank(0, 0, true);
     pros::delay(100);
     chassis.setPose(-29, -48, chassis.getPose().theta); // pose reset
 
     // get bottom left loader
-    loader.set_value(HIGH);
+   // loader.set_value(HIGH);
     chassis.moveToPose(-62, -48, -90, 2000, {.lead = 0, .maxSpeed = 60}, false);
     pros::delay(2000);
 
@@ -212,15 +212,15 @@ void auto_skills()
     intakeBottom.move(-127); // get unstuck
     pros::delay(200);
     intakeBottom.move(127);
-    intakeTop.move(127);
+    //intakeTop.move(127);
     pros::delay(1500);
-    intakeTop.move(0);
+    //intakeTop.move(0);
     chassis.tank(0, 0, true);
     pros::delay(300);
     chassis.setPose(-29, -48, -90); // pose reset
 
     // park
-    loader.set_value(LOW);
+    //loader.set_value(LOW);
     chassis.moveToPose(-45, -48, -90, 1000, {.lead = 0}, false);
     chassis.moveToPose(-45, -48, -45, 600, {.lead = 0}, false);
     chassis.moveToPose(-62, -19, -10, 1000, {}, false);

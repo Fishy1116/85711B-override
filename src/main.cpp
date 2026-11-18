@@ -195,7 +195,7 @@ static void btn_handler(lv_event_t *e)
 void screen_update_task(lv_timer_t *timer)
 {
     // --- TEMPS ---
-    double temps[8] = {lT.get_temperature(), lM.get_temperature(), lF.get_temperature(), rT.get_temperature(), rM.get_temperature(), rF.get_temperature(), intakeBottom.get_temperature(), intakeTop.get_temperature()};
+    double temps[8] = {lT.get_temperature(), lM.get_temperature(), lF.get_temperature(), rT.get_temperature(), rM.get_temperature(), rF.get_temperature(), intakeBottom.get_temperature()};
     double maxTemp = *std::max_element(temps, temps + 8);
 
     if (temp_var_label != NULL)
@@ -216,7 +216,7 @@ void screen_update_task(lv_timer_t *timer)
     }
 
     // --- MOTORS ---
-    bool motorsInstalled = lT.is_installed() && lM.is_installed() && lF.is_installed() && rT.is_installed() && rM.is_installed() && rF.is_installed() && intakeBottom.is_installed() && intakeTop.is_installed();
+    bool motorsInstalled = lT.is_installed() && lM.is_installed() && lF.is_installed() && rT.is_installed() && rM.is_installed() && rF.is_installed() && intakeBottom.is_installed();
     if (connection_var_label != NULL)
     {
         if (motorsInstalled)
@@ -312,15 +312,6 @@ void info_and_selector_screen(std::string mode)
 
     distance_var_label = lv_label_create(lv_screen_active());
     lv_obj_align(distance_var_label, LV_ALIGN_TOP_LEFT, 90, 150);
-
-    // led toggle button
-    led_btn = lv_button_create(lv_screen_active());
-    lv_obj_align(led_btn, LV_ALIGN_TOP_LEFT, 20, 180);
-    lv_obj_set_style_bg_color(led_btn, lv_palette_main(LV_PALETTE_GREEN), 0);
-    lv_obj_add_event_cb(led_btn, btn_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *led_btn_label = lv_label_create(led_btn);
-    lv_label_set_text(led_btn_label, "Toggle LEDs");
 
     // auto buttons
     red_btn = lv_button_create(lv_screen_active());
@@ -715,9 +706,8 @@ void opcontrol()
                     // drive forward and back a tile
                     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
                     {
-                                                // Update the entire controller settings struct
-                        chassis.lateralSettings.kP = lateral_kp;
-                        chassis.lateralSettings.kD = lateral_kd;
+                        chassis.lateralPID.kP = lateral_kp;
+                        chassis.lateralPID.kD = lateral_kd;
                         chassis.setPose(0, 0, 0);
                         chassis.moveToPose(0, 24, 0, 8000, {.lead = 0}); // lead to make straight, movetopoint doesn't keep straight
                         chassis.moveToPose(0, 0, 0, 8000, {.forwards = false, .lead = 0});
@@ -813,15 +803,15 @@ void opcontrol()
 
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
         {
-            //intakeTop.move(127); //set to cascade height controller
+            //intakeTop.move(127);
         }
         else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
-            //intakeTop.move(-127);//this too
+            //intakeTop.move(-127);
         }
         else
         {
-            //intakeTop.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD); //MODIFY: keep cascade from falling
+            //intakeTop.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             //intakeTop.move_velocity(0); // brake to prevent balls from coming out
         }
 
