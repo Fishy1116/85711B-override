@@ -602,36 +602,6 @@ void opcontrol()
             in_selector = false;
         }
 
-        // Run auto in driver, press left and A to start, move stick to override
-        if (selected_mode == MODE_STATE::SKILLS && master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) && master.get_digital(pros::E_CONTROLLER_DIGITAL_A))
-        {
-            if (auto_in_driver_task == nullptr)
-            {
-                auto_in_driver_task = new pros::Task(auto_skills);
-            }
-        }
-
-        // end task if its done
-        if (auto_in_driver_task != nullptr && auto_in_driver_task->get_state() == pros::E_TASK_STATE_DELETED)
-        {
-            delete auto_in_driver_task;
-            auto_in_driver_task = nullptr;
-        }
-
-        bool stick_moved = (abs(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 40 ||
-                            abs(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)) > 40 ||
-                            abs(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 40 ||
-                            abs(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X)) > 40);
-
-        // Cancel skills if stick moved
-        if (auto_in_driver_task != nullptr && stick_moved)
-        {
-            auto_in_driver_task->remove();
-            chassis.cancelAllMotions();
-            delete auto_in_driver_task;
-            auto_in_driver_task = nullptr;
-        }
-
         // PID Tuning utility - press left and right simultaneously
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X) && master.get_digital(pros::E_CONTROLLER_DIGITAL_A))
         {
@@ -778,14 +748,11 @@ void opcontrol()
             selected_pid = PID_STATE::NONE;
         }
 
-        // drive
-        if (auto_in_driver_task == nullptr)
-        {
-            int leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-            int rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-            chassis.arcade(leftY, rightX, false);
-        }
+        
+        int leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        chassis.arcade(leftY, rightX, false);
+        
 
         // intake
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
